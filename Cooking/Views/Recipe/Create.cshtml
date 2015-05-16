@@ -7,14 +7,14 @@
 <h2>Create</h2>
 
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm("Create", "Recipe", FormMethod.Post, new { id = "createForm" }))
 {
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
         <h4>Recipe</h4>
         <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
         <div class="form-group">
             @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -40,8 +40,34 @@
         </div>
 
         <div class="form-group">
+            @Html.Hidden("ingredientsCount", Model != null && Model.Ingredients != null ? Model.Ingredients.Count : 0, new { id = "ingredientsCount" })
+            @Html.LabelFor(model => model.Ingredients, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10" id="ingredientsList">
+                <button type="button" class="btn btn-default" id="addIngredientButton">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Add ingredient
+                </button>
+                @if (Model != null && Model.Ingredients != null && Model.Ingredients.Count > 0)
+                {
+                    for (int i = 0; i < Model.Ingredients.Count; i++)
+                    {
+                        <div class="col-md-10 ingredient-entry-row">
+                            <div class="col-md-5">
+                                <input type="text" class="form-control ingredient-entry" value="@Model.Ingredients[i]" />
+                            </div>
+                            <div class="col-md-5 btn-group" role="group">
+                                <button class="btn btn-default" type="button" onclick="removeAdditionalIngredient(this)"><span class="glyphicon glyphicon-minus"></span></button>
+                                <button class="btn btn-default" type="button" onclick="addAdditionalIngredient(this)"><span class="glyphicon glyphicon-plus"></span></button>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+
+        <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Create" class="btn btn-default" id="submitButton" />
             </div>
         </div>
     </div>
@@ -53,4 +79,68 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        var ingredientEntryTemplate = '<div class="col-md-10 ingredient-entry-row"><div class="col-md-5"><input type="text" class="form-control ingredient-entry" /></div> ' +
+            '<div class="col-md-5 btn-group" role="group">' +
+            '<button class="btn btn-default" type="button" onclick="removeAdditionalIngredient(this)"><span class="glyphicon glyphicon-minus"></span></button>' +
+            '<button class="btn btn-default" type="button" onclick="addAdditionalIngredient(this)"><span class="glyphicon glyphicon-plus"></span></button>' +
+            '</div></div>';
+
+        function addAdditionalIngredient(button) {
+            var ingredientEntryRow = $(button.parentNode.parentNode);
+            ingredientEntryRow.after(ingredientEntryTemplate);
+
+            increaseIngredientCount();
+        }
+
+        function removeAdditionalIngredient(button) {
+            var ingredientEntryRow = $(button.parentNode.parentNode);
+            ingredientEntryRow.remove();
+
+            decreaseIngredientCount();
+        }
+
+        function increaseIngredientCount() {
+            var ingredientsCount = $("#ingredientsCount");
+            var newValue = Number(ingredientsCount.val()) + 1;
+            ingredientsCount.val(newValue);
+            ingredientsCount.change();
+        }
+
+        function decreaseIngredientCount() {
+            var ingredientsCount = $("#ingredientsCount");
+            var newValue = Number(ingredientsCount.val()) - 1;
+            ingredientsCount.val(newValue);
+            ingredientsCount.change();
+        }
+
+        $(document).ready(function () {
+            $("#ingredientsCount").change(function () {
+                var value = Number($(this).val());
+                if (value == 0) {
+                    $("#addIngredientButton").show();
+                } else {
+                    $("#addIngredientButton").hide();
+                }
+            });
+            $("#ingredientsCount").change();
+
+            // main button
+            $("#addIngredientButton").click(function () {
+                $("#ingredientsList").append(ingredientEntryTemplate);
+                increaseIngredientCount();
+            });
+
+            // set correct ids for the ingredients on submit
+            $("#createForm").submit(function () {
+                var ingredients = $(".ingredient-entry");
+                var numberOfIngredients = ingredients.length;
+
+                for (var i = 0; i < numberOfIngredients; i++) {
+                    ingredients[i].id = "Ingredients_" + i + "_";
+                    ingredients[i].name = "Ingredients[" + i + "]";
+                }
+            });
+        });
+    </script>
 }

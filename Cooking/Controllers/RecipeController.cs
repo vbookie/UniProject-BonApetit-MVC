@@ -57,7 +57,8 @@ namespace Cooking.Controllers
                 {
                     Name = recipeModel.Name,
                     Description = recipeModel.Description,
-                    PrepareInstructions = recipeModel.PrepareInstructions
+                    PrepareInstructions = recipeModel.PrepareInstructions,
+                    Ingredients = recipeModel.Ingredients.Select(i => (Ingredient)i).ToList()
                 };
 
                 db.Recipes.Add(recipe);
