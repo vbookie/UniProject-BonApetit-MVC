@@ -19,7 +19,7 @@ namespace Cooking.Migrations
         {
             await this.AddRoles(context);
 
-            await this.AddAdminUser(context);
+            this.AddAdminUser(context);
         }
 
         private async Task AddRoles(ApplicationDbContext context)
@@ -33,7 +33,7 @@ namespace Cooking.Migrations
             await context.SaveChangesAsync();
         }
 
-        private async Task AddAdminUser(ApplicationDbContext context)
+        private void AddAdminUser(ApplicationDbContext context)
         {
             var adminUserExist = context.Users.Any(u => u.UserName == UserConst.AdminUsername);
             if (!adminUserExist)
@@ -45,11 +45,11 @@ namespace Cooking.Migrations
                 };
 
                 var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context));
-                await manager.CreateAsync(adminUser, UserConst.AdminPassword);
+                manager.CreateAsync(adminUser, UserConst.AdminPassword).Wait();
 
-                await manager.AddToRoleAsync(adminUser.Id, RoleConst.Administrator);
-                await manager.AddToRoleAsync(adminUser.Id, RoleConst.User);
-            }
+                manager.AddToRoleAsync(adminUser.Id, RoleConst.Administrator).Wait();
+                manager.AddToRoleAsync(adminUser.Id, RoleConst.User).Wait();
+            }   
         }
     }
 }
