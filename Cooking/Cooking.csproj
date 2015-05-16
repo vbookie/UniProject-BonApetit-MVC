@@ -193,6 +193,10 @@
     <Compile Include="Migrations\201505151645161_Initial.Designer.cs">
       <DependentUpon>201505151645161_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201505162130196_CreateDateForRecipe.cs" />
+    <Compile Include="Migrations\201505162130196_CreateDateForRecipe.Designer.cs">
+      <DependentUpon>201505162130196_CreateDateForRecipe.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\RecipeViewModels.cs" />
@@ -269,6 +273,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201505151645161_Initial.resx">
       <DependentUpon>201505151645161_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505162130196_CreateDateForRecipe.resx">
+      <DependentUpon>201505162130196_CreateDateForRecipe.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

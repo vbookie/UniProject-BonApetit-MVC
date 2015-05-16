@@ -1,19 +1,17 @@
 ﻿@model Cooking.Models.CreateRecipeViewModel
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Create Recipe";
 }
 
-<h2>Create</h2>
-
+<h2>Create new recipe</h2>
+<hr />
 
 @using (Html.BeginForm("Create", "Recipe", FormMethod.Post, new { id = "createForm" }))
 {
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <h4>Recipe</h4>
-        <hr />
         @Html.ValidationSummary(false, "", new { @class = "text-danger" })
         <div class="form-group">
             @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })

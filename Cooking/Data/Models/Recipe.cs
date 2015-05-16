@@ -20,6 +20,9 @@ namespace Cooking.Data.Models
         [DataType(DataType.MultilineText)]
         public string PrepareInstructions { get; set; }
 
+        [DataType(DataType.DateTime)]
+        public DateTime CreateDate { get; set; }
+
         public virtual Image Image { get; set; }
 
         public virtual IList<Ingredient> Ingredients { get; set; }
@@ -31,6 +34,7 @@ namespace Cooking.Data.Models
         public Recipe()
         {
             this.Id = Guid.NewGuid();
+            this.CreateDate = DateTime.UtcNow;
         }
     }
 }
