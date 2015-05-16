@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using Cooking.Data;
 using Cooking.Data.Models;
+using Cooking.Models;
 
 namespace Cooking.Controllers
 {
@@ -50,17 +51,23 @@ namespace Cooking.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles="Administrator")]
-        public async Task<ActionResult> Create([Bind(Include = "Id,Name,Description,PrepareInstructions")] Recipe recipe)
+        public async Task<ActionResult> Create(CreateRecipeViewModel recipeModel)
         {
             if (ModelState.IsValid)
             {
-                recipe.Id = Guid.NewGuid();
+                var recipe = new Recipe()
+                {
+                    Name = recipeModel.Name,
+                    Description = recipeModel.Description,
+                    PrepareInstructions = recipeModel.PrepareInstructions
+                };
+
                 db.Recipes.Add(recipe);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
-            return View(recipe);
+            return View(recipeModel);
         }
 
         // GET: Recipe/Edit/5
