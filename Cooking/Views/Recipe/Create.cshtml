@@ -64,6 +64,18 @@
         </div>
 
         <div class="form-group">
+            @Html.LabelFor(model => model.ImageId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.Hidden("ImageId", Model != null ? Model.ImageId.ToString() : Guid.Empty.ToString(), new { id = "recipeImageId" })
+                <img src="@(Model != null && Model.ImageUrl != null ? Model.ImageUrl : string.Empty)" class="thumbnail" id="recipeImage" />
+                <button type="button" id="chooseImageButton" class="btn btn-default">
+                    <span class="glyphicon glyphicon-folder-open"></span>
+                    Choose image
+                </button>
+            </div>
+        </div>
+
+        <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Create" class="btn btn-default" id="submitButton" />
             </div>
@@ -75,70 +87,10 @@
     @Html.ActionLink("Back to List", "Index")
 </div>
 
+<div id="addImageDialog" title="Add image"></div>
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-    <script>
-        var ingredientEntryTemplate = '<div class="col-md-10 ingredient-entry-row"><div class="col-md-5"><input type="text" class="form-control ingredient-entry" /></div> ' +
-            '<div class="col-md-5 btn-group" role="group">' +
-            '<button class="btn btn-default" type="button" onclick="removeAdditionalIngredient(this)"><span class="glyphicon glyphicon-minus"></span></button>' +
-            '<button class="btn btn-default" type="button" onclick="addAdditionalIngredient(this)"><span class="glyphicon glyphicon-plus"></span></button>' +
-            '</div></div>';
-
-        function addAdditionalIngredient(button) {
-            var ingredientEntryRow = $(button.parentNode.parentNode);
-            ingredientEntryRow.after(ingredientEntryTemplate);
-
-            increaseIngredientCount();
-        }
-
-        function removeAdditionalIngredient(button) {
-            var ingredientEntryRow = $(button.parentNode.parentNode);
-            ingredientEntryRow.remove();
-
-            decreaseIngredientCount();
-        }
-
-        function increaseIngredientCount() {
-            var ingredientsCount = $("#ingredientsCount");
-            var newValue = Number(ingredientsCount.val()) + 1;
-            ingredientsCount.val(newValue);
-            ingredientsCount.change();
-        }
-
-        function decreaseIngredientCount() {
-            var ingredientsCount = $("#ingredientsCount");
-            var newValue = Number(ingredientsCount.val()) - 1;
-            ingredientsCount.val(newValue);
-            ingredientsCount.change();
-        }
-
-        $(document).ready(function () {
-            $("#ingredientsCount").change(function () {
-                var value = Number($(this).val());
-                if (value == 0) {
-                    $("#addIngredientButton").show();
-                } else {
-                    $("#addIngredientButton").hide();
-                }
-            });
-            $("#ingredientsCount").change();
-
-            // main button
-            $("#addIngredientButton").click(function () {
-                $("#ingredientsList").append(ingredientEntryTemplate);
-                increaseIngredientCount();
-            });
-
-            // set correct ids for the ingredients on submit
-            $("#createForm").submit(function () {
-                var ingredients = $(".ingredient-entry");
-                var numberOfIngredients = ingredients.length;
-
-                for (var i = 0; i < numberOfIngredients; i++) {
-                    ingredients[i].id = "Ingredients_" + i + "_";
-                    ingredients[i].name = "Ingredients[" + i + "]";
-                }
-            });
-        });
-    </script>
+    @Scripts.Render("~/bundles/filestyle");
+    @Scripts.Render("~/Scripts/recipes.js")
 }

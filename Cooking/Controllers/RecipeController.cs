@@ -58,10 +58,11 @@ namespace Cooking.Controllers
                     Name = recipeModel.Name,
                     Description = recipeModel.Description,
                     PrepareInstructions = recipeModel.PrepareInstructions,
-                    Ingredients = recipeModel.Ingredients.Select(i => (Ingredient)i).ToList()
+                    Ingredients = recipeModel.Ingredients.Select(i => (Ingredient)i).ToList(),
+                    Image = db.GetImage(recipeModel.ImageId)
                 };
 
-                db.Recipes.Add(recipe);
+                db.Create(recipe);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
@@ -123,7 +124,11 @@ namespace Cooking.Controllers
         public async Task<ActionResult> DeleteConfirmed(Guid id)
         {
             Recipe recipe = await db.Recipes.FindAsync(id);
+
+            db.Images.Remove(recipe.Image);
+            db.Ingredients.RemoveRange(recipe.Ingredients);
             db.Recipes.Remove(recipe);
+
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }

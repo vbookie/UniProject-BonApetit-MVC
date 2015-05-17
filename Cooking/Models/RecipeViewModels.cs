@@ -4,13 +4,12 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Cooking.Data.Models;
 
 namespace Cooking.Models
 {
     public class CreateRecipeViewModel
     {
-        public string Id { get; set; }
-
         [Required]
         public string Name { get; set; }
 
@@ -23,6 +22,12 @@ namespace Cooking.Models
         [Display(Name = "Prepare Instructions")]
         public string PrepareInstructions { get; set; }
 
+        [GuidRequired]
+        [Display(Name = "Image")]
+        public Guid ImageId { get; set; }
+
+        public string ImageUrl { get; set; }
+
         [NoEmptyValues]
         public IList<string> Ingredients { get; set; }
 
@@ -33,7 +38,7 @@ namespace Cooking.Models
     public class NoEmptyValues : ValidationAttribute
     {
         public NoEmptyValues() : base() 
-        {  
+        {
         }
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
@@ -52,6 +57,28 @@ namespace Cooking.Models
             else
             {
                 return new ValidationResult(string.Format("At least 1 entry for {0} is required.", validationContext.DisplayName));
+            }
+        }
+    }
+
+    public class GuidRequired : ValidationAttribute
+    {
+        public GuidRequired()
+            : base("The {0} is required.")
+        {
+        }
+
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            Guid guid;
+            if (Guid.TryParse(value.ToString(), out guid) && guid != Guid.Empty)
+            {
+                return ValidationResult.Success;
+            }
+            else
+            {
+                var error = FormatErrorMessage(validationContext.DisplayName);
+                return new ValidationResult(error);
             }
         }
     }
