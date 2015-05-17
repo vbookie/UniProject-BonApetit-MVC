@@ -37,6 +37,13 @@ namespace Cooking.Data
             return recipe;
         }
 
+        public void Delete(Recipe recipe)
+        {
+            this.Images.Remove(recipe.Image);
+            this.Ingredients.RemoveRange(recipe.Ingredients);
+            this.Recipes.Remove(recipe);
+        }
+
         public void Create(Image image)
         {
             this.Images.Add(image);
@@ -55,6 +62,6 @@ namespace Cooking.Data
         public void Delete(IEnumerable<Ingredient> ingredient)
         {
             this.Ingredients.RemoveRange(ingredient);
-        }
+        }   
     }
 }

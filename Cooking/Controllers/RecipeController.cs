@@ -147,10 +147,7 @@ namespace Cooking.Controllers
         public async Task<ActionResult> DeleteConfirmed(Guid id)
         {
             Recipe recipe = await db.Recipes.FindAsync(id);
-
-            db.Images.Remove(recipe.Image);
-            db.Ingredients.RemoveRange(recipe.Ingredients);
-            db.Recipes.Remove(recipe);
+            db.Delete(recipe);
 
             await db.SaveChangesAsync();
             return RedirectToAction("Index");

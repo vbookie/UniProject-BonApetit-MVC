@@ -21,6 +21,7 @@ namespace Cooking.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Image/Create
+        [Authorize(Roles = "Administrator")]
         public PartialViewResult Create()
         {
             return PartialView("_Create");
@@ -31,6 +32,7 @@ namespace Cooking.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator")]
         public async Task<ActionResult> Create(ImageViewModel imageModel)
         {
             var validImageTypes = new string[]
