@@ -200,6 +200,7 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\CustomValidationAttributes.cs" />
     <Compile Include="Models\ImageViewModels.cs" />
     <Compile Include="Models\RecipeViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
