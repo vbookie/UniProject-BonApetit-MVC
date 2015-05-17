@@ -6,10 +6,12 @@
 
 @if (System.Security.Claims.ClaimsPrincipal.Current.IsInRole(Cooking.Data.RoleConst.Administrator))
 {
-    <div class="row">
-        <div class="btn-group">
-            <a href="@Url.Action("Edit", new { id = Model.Id })" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span> Edit</a>
-            <a href="@Url.Action("Delete", new { id = Model.Id })" class="btn btn-default"><span class="glyphicon glyphicon-trash"></span> Delete</a>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="btn-group">
+                <a href="@Url.Action("Edit", new { id = Model.Id })" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span> Edit</a>
+                <a href="@Url.Action("Delete", new { id = Model.Id })" class="btn btn-default"><span class="glyphicon glyphicon-trash"></span> Delete</a>
+            </div>
         </div>
     </div>
 }
@@ -43,7 +45,7 @@
     </div>
 </div>
 <p>
-    @Html.ActionLink("Back to Recipes", "Index")
+    @Html.ActionLink("Back to Recipes", "Index", null, htmlAttributes: new { @class = "btn btn-primary" })
 </p>
 
 <style>

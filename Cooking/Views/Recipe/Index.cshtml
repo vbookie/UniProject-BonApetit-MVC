@@ -4,13 +4,13 @@
     ViewBag.Title = "Recipes";
 }
 
-<h2>All recipes</h2>
-
 @if (System.Security.Claims.ClaimsPrincipal.Current.IsInRole(Cooking.Data.RoleConst.Administrator))
-{ 
-    <div class="row">
-        <div class="btn-group">
-            <a href="@Url.Action("Create")" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span> Add recipe</a>
+{
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="btn-group">
+                <a href="@Url.Action("Create")" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span> Add recipe</a>
+            </div>
         </div>
     </div>
 }
