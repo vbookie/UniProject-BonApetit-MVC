@@ -46,5 +46,15 @@ namespace Cooking.Data
         {
             return this.Images.SingleOrDefault(i => i.Id == id);
         }
+
+        public void Delete(Ingredient ingredient)
+        {
+            this.Ingredients.Remove(ingredient);
+        }
+
+        public void Delete(IEnumerable<Ingredient> ingredient)
+        {
+            this.Ingredients.RemoveRange(ingredient);
+        }
     }
 }

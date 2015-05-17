@@ -78,27 +78,50 @@ namespace Cooking.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
             Recipe recipe = await db.Recipes.FindAsync(id);
             if (recipe == null)
             {
                 return HttpNotFound();
             }
-            return View(recipe);
+
+            var model = new EditRecipeViewModel()
+            {
+                Id = recipe.Id,
+                Name = recipe.Name,
+                Description = recipe.Description,
+                PrepareInstructions = recipe.PrepareInstructions,
+                Ingredients = recipe.Ingredients.Select(i => i.Content).ToList(),
+                ImageId = recipe.Image.Id,
+                ImageUrl = Url.Content(recipe.Image.ImageUrl)
+            };
+
+            return View(model);
         }
 
         // POST: Recipe/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator")]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,Name,Description,PrepareInstructions")] Recipe recipe)
+        public async Task<ActionResult> Edit(EditRecipeViewModel recipeModel)
         {
             if (ModelState.IsValid)
             {
+                var recipe = db.GetRecipe(recipeModel.Id);
+
+                recipe.Name = recipeModel.Name;
+                recipe.Description = recipeModel.Description;
+                recipe.PrepareInstructions = recipeModel.PrepareInstructions;
+                recipe.Image = db.GetImage(recipeModel.ImageId);
+
+                this.EditIngredients(recipeModel, recipe);
+                
                 db.Entry(recipe).State = EntityState.Modified;
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            return View(recipe);
+
+            return View(recipeModel);
         }
 
         // GET: Recipe/Delete/5
@@ -140,6 +163,30 @@ namespace Cooking.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        private void EditIngredients(EditRecipeViewModel recipeModel, Recipe recipe)
+        {
+            var newIngredients = new List<Ingredient>();
+
+            foreach (var ingredientContent in recipeModel.Ingredients)
+            {
+                Ingredient ingredient;
+                var existingIngredient = recipe.Ingredients.FirstOrDefault(i => i.Content == ingredientContent);
+                if (existingIngredient == null)
+                    ingredient = new Ingredient() { Content = ingredientContent };
+                else
+                {
+                    ingredient = existingIngredient;
+                    recipe.Ingredients.Remove(existingIngredient);
+                }
+
+                newIngredients.Add(ingredient);
+            }
+
+            db.Delete(recipe.Ingredients);
+
+            recipe.Ingredients = newIngredients;
         }
     }
 }

@@ -7,7 +7,7 @@
 <h2>Create new recipe</h2>
 <hr />
 
-@using (Html.BeginForm("Create", "Recipe", FormMethod.Post, new { id = "createForm" }))
+@using (Html.BeginForm("Create", "Recipe", FormMethod.Post, new { id = "recipeForm" }))
 {
     @Html.AntiForgeryToken()
     

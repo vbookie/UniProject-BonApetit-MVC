@@ -52,7 +52,7 @@ function setupIngredients() {
     });
 
     // set correct ids for the ingredients on submit
-    $("#createForm").submit(function () {
+    $("#recipeForm").submit(function () {
         var ingredients = $(".ingredient-entry");
         var numberOfIngredients = ingredients.length;
 
