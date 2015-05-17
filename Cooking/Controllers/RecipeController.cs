@@ -18,9 +18,26 @@ namespace Cooking.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Recipe
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(int id = 0)
         {
-            return View(await db.Recipes.ToListAsync());
+            var recipesCount = await db.Recipes.CountAsync();
+            var recipes = await db.Recipes.OrderBy(r => r.CreateDate).Skip(id * 8).Take(8).ToListAsync();
+
+            var model = new IndexRecipeViewModel()
+            {
+                PageId = id,
+                HasNextPage = (recipesCount / 8) > id,
+                HasPreviousPage = id > 0,
+                Recipes = recipes.Select(
+                    r => new SingleRecipeViewModel()
+                    {
+                        Id = r.Id,
+                        Name = r.Name,
+                        ImageUrl = Url.Content(r.Image.ImageUrl)
+                    })
+            };
+
+            return View(model);
         }
 
         // GET: Recipe/Details/5
@@ -30,19 +47,31 @@ namespace Cooking.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
             Recipe recipe = await db.Recipes.FindAsync(id);
             if (recipe == null)
             {
                 return HttpNotFound();
             }
-            return View(recipe);
+
+            var model = new DetailsRecipeViewModel()
+            {
+                Id = recipe.Id,
+                Name = recipe.Name,
+                Description = recipe.Description,
+                PrepareInstructions = recipe.PrepareInstructions,
+                Ingredients = recipe.Ingredients.Select(i => i.Content).ToList(),
+                ImageUrl = Url.Content(recipe.Image.ImageUrl)
+            };
+
+            return View(model);
         }
 
         // GET: Recipe/Create
         [Authorize(Roles = "Administrator")]
         public ActionResult Create()
         {
-            return View();
+            return View(); 
         }
 
         // POST: Recipe/Create

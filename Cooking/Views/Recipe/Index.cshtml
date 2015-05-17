@@ -1,45 +1,52 @@
-﻿@model IEnumerable<Cooking.Data.Models.Recipe>
+﻿@model Cooking.Models.IndexRecipeViewModel
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Recipes";
 }
 
-<h2>Index</h2>
+<h2>All recipes</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Description)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PrepareInstructions)
-        </th>
-        <th></th>
-    </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Description)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PrepareInstructions)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
-    </tr>
+@if (System.Security.Claims.ClaimsPrincipal.Current.IsInRole(Cooking.Data.RoleConst.Administrator))
+{ 
+    <div class="row">
+        <div class="btn-group">
+            <a href="@Url.Action("Create")" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span> Add recipe</a>
+        </div>
+    </div>
 }
+<div class="row">
+    <div class="col-md-2">
+        <h3 class="h4">@Html.DisplayNameFor(m => m.Categories)</h3>
+    </div>
+    <div class="col-md-7">
+        @for (int i = 0; i < 2; i++)
+        {
+            <div class="row">
+                @foreach (var recipe in Model.Recipes.Skip(i * 4).Take(4))
+                {
+                    <div class="col-md-3">
+                        <a href="@Url.Action("Details", new { id = recipe.Id })">
+                            <img src="@recipe.ImageUrl" class="img-responsive img-thumbnail" />
+                            <div class="text-center">@recipe.Name</div>
+                        </a>
+                    </div>
+                }
+            </div>
+        }
+        <div class="row text-center">
+            <div class="btn-group btn-group-sm" role="group">
+                @if (Model.HasPreviousPage)
+                { 
+                    <a href="@Url.Action("Index", new { id = Model.PageId - 1 })" class="btn btn-default"><span class="glyphicon glyphicon-arrow-left"></span> Previous</a>
+                }
+                @if (Model.HasNextPage)
+                {
+                    <a href="@Url.Action("Index", new { id = Model.PageId + 1 })" class="btn btn-default">Next <span class="glyphicon glyphicon-arrow-right"></span></a>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
 
-</table>
+    </div>
+</div>
