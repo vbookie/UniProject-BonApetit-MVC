@@ -18,15 +18,17 @@ namespace Cooking.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Recipe
-        public async Task<ActionResult> Index(int id = 0)
+        public async Task<ActionResult> Index(int id = 0, string category = null)
         {
-            var recipesCount = await db.Recipes.CountAsync();
-            var recipes = await db.Recipes.OrderBy(r => r.CreateDate).Skip(id * 8).Take(8).ToListAsync();
+            var allRecipes = db.GetRecipes(category).OrderBy(r => r.CreateDate);
+
+            var totalRecipesCount = await allRecipes.CountAsync();
+            var recipes = await allRecipes.Skip(id * 8).Take(8).ToListAsync();
 
             var model = new IndexRecipeViewModel()
             {
                 PageId = id,
-                HasNextPage = (recipesCount / 8) > id,
+                HasNextPage = (totalRecipesCount / 8) > id,
                 HasPreviousPage = id > 0,
                 Recipes = recipes.Select(
                     r => new SingleRecipeViewModel()
@@ -34,7 +36,9 @@ namespace Cooking.Controllers
                         Id = r.Id,
                         Name = r.Name,
                         ImageUrl = Url.Content(r.Image.ImageUrl)
-                    })
+                    }),
+                CurrentCategory = category,
+                Categories = (await db.GetCategoriesAsync()).Select(c => c.Name).OrderBy(c => c).ToList()
             };
 
             return View(model);

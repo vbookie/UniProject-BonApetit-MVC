@@ -37,6 +37,14 @@ namespace Cooking.Data
             return recipe;
         }
 
+        public IQueryable<Recipe> GetRecipes(string categoryName)
+        {
+            if (categoryName != null)
+                return this.Recipes.Where(r => r.Categories.Any(c => c.Name == categoryName));
+            else
+                return this.Recipes;
+        }
+
         public void Delete(Recipe recipe)
         {
             this.Images.Remove(recipe.Image);
@@ -73,6 +81,12 @@ namespace Cooking.Data
         public Category GetCategory(Guid id)
         {
             var category = this.Categories.Find(id);
+            return category;
+        }
+
+        public Category GetCategory(string name)
+        {
+            var category = this.Categories.FirstOrDefault(c => c.Name == name);
             return category;
         }
 

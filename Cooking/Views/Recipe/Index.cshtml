@@ -17,26 +17,45 @@
 <div class="row">
     <div class="col-md-2">
         <h3 class="h4">@Html.DisplayNameFor(m => m.Categories)</h3>
+        <ul class="list-unstyled">
+            <li class="item"><a href="@Url.Action("Index", new { id = 0 })">All</a></li>
+            @foreach (var category in Model.Categories)
+            {
+                <li class="item"><a href="@Url.Action("Index", new { id = 0, category = category })">@category</a></li>
+            }
+        </ul>
+
     </div>
     <div class="col-md-7">
-        @for (int i = 0; i < 2; i++)
+        @if (Model.Recipes.Count() > 0)
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                <div class="row">
+                    @foreach (var recipe in Model.Recipes.Skip(i * 4).Take(4))
+                    {
+                        <div class="col-md-3">
+                            <a href="@Url.Action("Details", new { id = recipe.Id })">
+                                <img src="@recipe.ImageUrl" class="img-responsive img-thumbnail" />
+                                <div class="text-center">@recipe.Name</div>
+                            </a>
+                        </div>
+                    }
+                </div>
+            }
+        }
+        else
         {
             <div class="row">
-                @foreach (var recipe in Model.Recipes.Skip(i * 4).Take(4))
-                {
-                    <div class="col-md-3">
-                        <a href="@Url.Action("Details", new { id = recipe.Id })">
-                            <img src="@recipe.ImageUrl" class="img-responsive img-thumbnail" />
-                            <div class="text-center">@recipe.Name</div>
-                        </a>
-                    </div>
-                }
+                <div class="alert alert-info text-center" role="alert">
+                    @(Model.CurrentCategory == null ? "No recipes found" : string.Format("No recipes found for category {0}.", Model.CurrentCategory))
+                </div>
             </div>
-        }
+                    }
         <div class="row text-center">
             <div class="btn-group btn-group-sm" role="group">
                 @if (Model.HasPreviousPage)
-                { 
+                {
                     <a href="@Url.Action("Index", new { id = Model.PageId - 1 })" class="btn btn-default"><span class="glyphicon glyphicon-arrow-left"></span> Previous</a>
                 }
                 @if (Model.HasNextPage)

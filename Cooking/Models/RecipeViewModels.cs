@@ -97,6 +97,8 @@ namespace Cooking.Models
 
         public bool HasNextPage { get; set; }
 
+        public string CurrentCategory { get; set; }
+
         public IList<string> Categories { get; set; }
     }
 
