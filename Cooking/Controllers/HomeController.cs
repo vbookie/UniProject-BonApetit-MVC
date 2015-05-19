@@ -13,10 +13,8 @@ namespace Cooking.Controllers
             return RedirectToAction("Index", "Recipe");
         }
 
-        public ActionResult About()
+        public ActionResult CookingTips()
         {
-            ViewBag.Message = "Your application description page.";
-
             return View();
         }
 

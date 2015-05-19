@@ -30,7 +30,7 @@ namespace Cooking.Controllers
             var model = new IndexRecipeViewModel()
             {
                 PageId = id,
-                HasNextPage = (totalRecipesCount / 8) > id,
+                HasNextPage = totalRecipesCount > (id + 1) * 8,
                 HasPreviousPage = id > 0,
                 Recipes = recipes.Select(
                     r => new SingleRecipeViewModel()
