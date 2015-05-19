@@ -8,10 +8,10 @@
 {
     <div class="panel panel-default">
         <div class="panel-body">
-            <div class="btn-group">
-                <a href="@Url.Action("Edit", new { id = Model.Id })" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span> Edit</a>
-                <a href="@Url.Action("Delete", new { id = Model.Id })" class="btn btn-default"><span class="glyphicon glyphicon-trash"></span> Delete</a>
-            </div>
+            @*<div class="btn-group">*@
+                <a href="@Url.Action("Edit", new { id = Model.Id })" class="btn btn-success"><span class="glyphicon glyphicon-pencil"></span> Edit</a>
+                <a href="@Url.Action("Delete", new { id = Model.Id })" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span> Delete</a>
+            @*</div>*@
         </div>
     </div>
 }
@@ -40,8 +40,18 @@
             @Html.DisplayFor(model => model.PrepareInstructions)
         </p>
     </div>
-    <div class="col-md-4">
-        
+    <div class="col-md-2">
+        <div class="panel panel-default">
+            <div class="panel-heading">Latest recipes</div>
+            <div class="panel-body">
+                @foreach (var recipe in Model.LatestRecipes)
+                {
+                    <a href="@Url.Action("Details", new { id = recipe.Id })" title="@recipe.Name">
+                        <img src="@recipe.ImageUrl" class="img-responsive img-thumbnail" />
+                    </a>
+                }
+            </div>
+        </div>
     </div>
 </div>
 <p>

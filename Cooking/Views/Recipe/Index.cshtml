@@ -9,24 +9,27 @@
     <div class="panel panel-default">
         <div class="panel-body">
             <div class="btn-group">
-                <a href="@Url.Action("Create")" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span> Add recipe</a>
+                <a href="@Url.Action("Create")" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> Add recipe</a>
             </div>
         </div>
     </div>
 }
 <div class="row">
     <div class="col-md-2">
-        <h3 class="h4">@Html.DisplayNameFor(m => m.Categories)</h3>
-        <ul class="list-unstyled">
-            <li class="item"><a href="@Url.Action("Index", new { id = 0 })">All</a></li>
-            @foreach (var category in Model.Categories)
-            {
-                <li class="item"><a href="@Url.Action("Index", new { id = 0, category = category })">@category</a></li>
-            }
-        </ul>
-
+        <div class="panel panel-default">
+            <div class="panel-heading">@Html.DisplayNameFor(m => m.Categories)</div>
+            <div class="panel-body">
+                <ul class="list-unstyled">
+                    <li class="item"><a href="@Url.Action("Index", new { id = 0 })">All</a></li>
+                    @foreach (var category in Model.Categories)
+                    {
+                        <li class="item"><a href="@Url.Action("Index", new { id = 0, category = category })">@category</a></li>
+                    }
+                </ul>
+            </div>
+        </div>
     </div>
-    <div class="col-md-7">
+    <div class="col-md-8">
         @if (Model.Recipes.Count() > 0)
         {
             for (int i = 0; i < 2; i++)
@@ -34,8 +37,8 @@
                 <div class="row">
                     @foreach (var recipe in Model.Recipes.Skip(i * 4).Take(4))
                     {
-                        <div class="col-md-3">
-                            <a href="@Url.Action("Details", new { id = recipe.Id })">
+                        <div class="col-md-3 text-center">
+                            <a href="@Url.Action("Details", new { id = recipe.Id })" title="@recipe.Name">
                                 <img src="@recipe.ImageUrl" class="img-responsive img-thumbnail" />
                                 <div class="text-center">@recipe.Name</div>
                             </a>
@@ -65,7 +68,17 @@
             </div>
         </div>
     </div>
-    <div class="col-md-3">
-
+    <div class="col-md-2">
+        <div class="panel panel-default">
+            <div class="panel-heading">Latest recipes</div>
+            <div class="panel-body">
+                @foreach (var recipe in Model.LatestRecipes)
+                {
+                    <a href="@Url.Action("Details", new { id = recipe.Id })" title="@recipe.Name">
+                        <img src="@recipe.ImageUrl" class="img-responsive img-thumbnail" />
+                    </a>
+                }
+            </div>
+        </div>
     </div>
 </div>

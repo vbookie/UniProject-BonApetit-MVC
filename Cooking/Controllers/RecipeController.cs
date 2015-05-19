@@ -20,10 +20,12 @@ namespace Cooking.Controllers
         // GET: Recipe
         public async Task<ActionResult> Index(int id = 0, string category = null)
         {
-            var allRecipes = db.GetRecipes(category).OrderBy(r => r.CreateDate);
+            var allRecipes = db.GetRecipes(category).OrderByDescending(r => r.CreateDate);
 
             var totalRecipesCount = await allRecipes.CountAsync();
             var recipes = await allRecipes.Skip(id * 8).Take(8).ToListAsync();
+
+            var latestRecipes = await GetLatestRecipes();
 
             var model = new IndexRecipeViewModel()
             {
@@ -31,6 +33,13 @@ namespace Cooking.Controllers
                 HasNextPage = (totalRecipesCount / 8) > id,
                 HasPreviousPage = id > 0,
                 Recipes = recipes.Select(
+                    r => new SingleRecipeViewModel()
+                    {
+                        Id = r.Id,
+                        Name = r.Name,
+                        ImageUrl = Url.Content(r.Image.ImageUrl)
+                    }),
+                LatestRecipes = latestRecipes.Select(
                     r => new SingleRecipeViewModel()
                     {
                         Id = r.Id,
@@ -58,6 +67,8 @@ namespace Cooking.Controllers
                 return HttpNotFound();
             }
 
+            var latestRecipes = await GetLatestRecipes();
+
             var model = new DetailsRecipeViewModel()
             {
                 Id = recipe.Id,
@@ -65,7 +76,14 @@ namespace Cooking.Controllers
                 Description = recipe.Description,
                 PrepareInstructions = recipe.PrepareInstructions,
                 Ingredients = recipe.Ingredients.Select(i => i.Content).ToList(),
-                ImageUrl = Url.Content(recipe.Image.ImageUrl)
+                ImageUrl = Url.Content(recipe.Image.ImageUrl),
+                LatestRecipes = latestRecipes.Select(
+                    r => new SingleRecipeViewModel()
+                    {
+                        Id = r.Id,
+                        Name = r.Name,
+                        ImageUrl = Url.Content(r.Image.ImageUrl)
+                    }),
             };
 
             return View(model);
@@ -269,6 +287,12 @@ namespace Cooking.Controllers
             var categories = await db.GetCategoriesAsync();
             ViewBag.CategoriesList = categories
                     .Select(c => new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = recipeModel != null && recipeModel.Categories != null && recipeModel.Categories.Contains(c.Id) });
+        }
+
+        private async Task<List<Recipe>> GetLatestRecipes()
+        {
+            var latestRecipes = await db.GetRecipes().OrderByDescending(r => r.CreateDate).Take(3).ToListAsync();
+            return latestRecipes;
         }
     }
 }

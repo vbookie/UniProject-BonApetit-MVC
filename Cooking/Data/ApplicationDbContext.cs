@@ -37,7 +37,7 @@ namespace Cooking.Data
             return recipe;
         }
 
-        public IQueryable<Recipe> GetRecipes(string categoryName)
+        public IQueryable<Recipe> GetRecipes(string categoryName = null)
         {
             if (categoryName != null)
                 return this.Recipes.Where(r => r.Categories.Any(c => c.Name == categoryName));

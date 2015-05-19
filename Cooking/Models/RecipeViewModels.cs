@@ -85,11 +85,15 @@ namespace Cooking.Models
 
         //[Required]
         public IList<string> Categories { get; set; }
+
+        public IEnumerable<SingleRecipeViewModel> LatestRecipes { get; set; }
     }
 
     public class IndexRecipeViewModel
     {
         public IEnumerable<SingleRecipeViewModel> Recipes { get; set; }
+
+        public IEnumerable<SingleRecipeViewModel> LatestRecipes { get; set; }
 
         public int PageId { get; set; }
 
