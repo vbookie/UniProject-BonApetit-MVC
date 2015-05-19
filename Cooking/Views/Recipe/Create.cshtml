@@ -76,6 +76,23 @@
         </div>
 
         <div class="form-group">
+            @Html.LabelFor(model => model.Categories, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <select name="Categories" multiple id="categoriesList" class="selectpicker">
+                    @foreach (var item in ViewBag.CategoriesList as IEnumerable<SelectListItem>)
+                    {
+                        <option value="@item.Value" @(item.Selected ? "selected='selected'" : "")>@item.Text</option>
+                    }
+                </select>
+
+                @*@Html.DropDownList("Categories", ViewBag.CategoriesList as IEnumerable<SelectListItem>, htmlAttributes: new { id = "categoriesList", @class = "selectpicker", multiple = "multiple" })*@
+                <button type="button" id="addCategoryButton" class="btn btn-default">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Add category
+                </button>
+            </div>
+        </div>
+        <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Create" class="btn btn-default" id="submitButton" />
             </div>
@@ -88,6 +105,7 @@
 </div>
 
 <div id="addImageDialog" title="Add image"></div>
+<div id="addCategoryDialog" title="Add category"></div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

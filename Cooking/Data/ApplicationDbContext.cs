@@ -62,6 +62,23 @@ namespace Cooking.Data
         public void Delete(IEnumerable<Ingredient> ingredient)
         {
             this.Ingredients.RemoveRange(ingredient);
-        }   
+        }
+
+        public async Task<IList<Category>> GetCategoriesAsync()
+        {
+            var categories = await this.Categories.ToListAsync();
+            return categories;
+        }
+
+        public Category GetCategory(Guid id)
+        {
+            var category = this.Categories.Find(id);
+            return category;
+        }
+
+        public void Create(Category category)
+        {
+            this.Categories.Add(category);
+        }
     }
 }

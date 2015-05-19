@@ -32,8 +32,8 @@ namespace Cooking.Models
         [NoEmptyValues]
         public IList<string> Ingredients { get; set; }
 
-        //[Required]
-        public IList<string> Categories { get; set; }
+        [Required]
+        public Guid[] Categories { get; set; }
     }
 
     public class EditRecipeViewModel
@@ -62,8 +62,8 @@ namespace Cooking.Models
         [NoEmptyValues]
         public IList<string> Ingredients { get; set; }
 
-        //[Required]
-        public IList<string> Categories { get; set; }
+        [Required]
+        public Guid[] Categories { get; set; }
     }
 
     public class DetailsRecipeViewModel

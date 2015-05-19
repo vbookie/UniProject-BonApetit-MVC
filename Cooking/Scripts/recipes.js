@@ -163,7 +163,103 @@ function setupImage() {
     });
 }
 
+function setupCategory() {
+    var categoryForm;
+    var catalogDialogContainer = $("#addCategoryDialog");
+    var catalogDialog = catalogDialogContainer.dialog({
+        autoOpen: false,
+        height: 250,
+        width: 400,
+        modal: true,
+        buttons: {
+            "Create": createCategory,
+            Cancel: function () {
+                catalogDialog.dialog("close");
+            }
+        },
+        close: function () {
+            catalogDialog.empty();
+        },
+        show: {
+            effect: "drop",
+            duration: 1000
+        },
+        hide: {
+            effect: "drop",
+            duration: 1000
+        }
+    });
+
+    function createCategory() {
+        var formData = new FormData(categoryForm[0]);
+
+        $.ajax({
+            url: '/Category/Create',
+            type: 'POST',
+            beforeSend: function () {
+            },
+            success: function (result) {
+                if (result.success === true) {
+                    $("#categoriesList").append("<option value='" + result.id + "'>" + result.name + "</option>");
+                    $("#categoriesList").selectpicker("refresh");
+                    catalogDialog.dialog("close");
+                } else {
+                    catalogDialog.empty();
+                    catalogDialog.append(result.content);
+
+                    categoryForm = catalogDialogContainer.find("form");
+                    categoryForm.on("submit", function (event) {
+                        event.preventDefault();
+                        createCategory();
+                    });
+                }
+            },
+            xhr: function () {  // Custom XMLHttpRequest
+                var myXhr = $.ajaxSettings.xhr();
+                if (myXhr.upload) {
+
+                }
+                return myXhr;
+            },
+            error: function (xhr, status, error) {
+                catalogDialog.empty();
+                catalogDialog.append(error);
+            },
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+    }
+
+    $("#addCategoryButton").click(function () {
+        $.ajax({
+            url: '/Category/Create',
+            method: "GET",
+            dataType: "html"
+        }).success(function (data) {
+            catalogDialogContainer.append(data);
+
+            categoryForm = catalogDialogContainer.find("form");
+            categoryForm.on("submit", function (event) {
+                event.preventDefault();
+                createCategory();
+            });
+
+            catalogDialog.dialog("open");
+        }).error(function (xhr, status, error) {
+            catalogDialogContainer.append(error);
+            catalogDialog.dialog("open");
+        });
+    });
+}
+
+
+
 $(document).ready(function () {
     setupIngredients();
     setupImage();
+
+    $('#categoriesList').selectpicker();
+    setupCategory();
 });

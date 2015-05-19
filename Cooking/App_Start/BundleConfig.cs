@@ -24,12 +24,15 @@ namespace Cooking
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js"));
 
-            bundles.Add(new ScriptBundle("~/bundles/filestyle").Include("~/Scripts/bootstrap-filestyle.min.js"));
+            bundles.Add(new ScriptBundle("~/bundles/filestyle").Include(
+                "~/Scripts/bootstrap-filestyle.min.js",
+                "~/Scripts/bootstrap-select.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css",
-                      "~/Content/themes/base/all.css"));
+                      "~/Content/themes/base/all.css",
+                      "~/Content/bootstrap-select.css"));
         }
     }
 }

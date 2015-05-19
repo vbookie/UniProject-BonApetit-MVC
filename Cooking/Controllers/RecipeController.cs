@@ -69,9 +69,11 @@ namespace Cooking.Controllers
 
         // GET: Recipe/Create
         [Authorize(Roles = "Administrator")]
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
-            return View(); 
+            await this.LoadCategoriesInViewBag();
+
+            return View();
         }
 
         // POST: Recipe/Create
@@ -88,13 +90,21 @@ namespace Cooking.Controllers
                     Description = recipeModel.Description,
                     PrepareInstructions = recipeModel.PrepareInstructions,
                     Ingredients = recipeModel.Ingredients.Select(i => (Ingredient)i).ToList(),
-                    Image = db.GetImage(recipeModel.ImageId)
+                    Image = db.GetImage(recipeModel.ImageId),
+                    Categories = db.Categories.Where(c => recipeModel.Categories.Contains(c.Id)).ToList()
                 };
 
                 db.Create(recipe);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
+
+            if (recipeModel.ImageId != Guid.Empty)
+            {
+                recipeModel.ImageUrl = Url.Content(db.GetImage(recipeModel.ImageId).ImageUrl);
+            }
+
+            await this.LoadCategoriesInViewBag(recipeModel);
 
             return View(recipeModel);
         }
@@ -122,8 +132,11 @@ namespace Cooking.Controllers
                 PrepareInstructions = recipe.PrepareInstructions,
                 Ingredients = recipe.Ingredients.Select(i => i.Content).ToList(),
                 ImageId = recipe.Image.Id,
-                ImageUrl = Url.Content(recipe.Image.ImageUrl)
+                ImageUrl = Url.Content(recipe.Image.ImageUrl),
+                Categories = recipe.Categories.Select(c => c.Id).ToArray()
             };
+
+            await this.LoadCategoriesInViewBag(model);
 
             return View(model);
         }
@@ -143,11 +156,20 @@ namespace Cooking.Controllers
                 recipe.PrepareInstructions = recipeModel.PrepareInstructions;
                 recipe.Image = db.GetImage(recipeModel.ImageId);
 
+                this.EditCategories(recipeModel, recipe);
+
                 this.EditIngredients(recipeModel, recipe);
                 
                 db.Entry(recipe).State = EntityState.Modified;
                 await db.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return RedirectToAction("Details", new { id = recipe.Id });
+            }
+
+            await this.LoadCategoriesInViewBag(recipeModel);
+
+            if (recipeModel.ImageId != Guid.Empty)
+            {
+                recipeModel.ImageUrl = Url.Content(db.GetImage(recipeModel.ImageId).ImageUrl);
             }
 
             return View(recipeModel);
@@ -213,6 +235,36 @@ namespace Cooking.Controllers
             db.Delete(recipe.Ingredients);
 
             recipe.Ingredients = newIngredients;
+        }
+
+        private void EditCategories(EditRecipeViewModel recipeModel, Recipe recipe)
+        {
+            var newCategories = new List<Category>();
+
+            foreach (var categoryId in recipeModel.Categories)
+            {
+                var existing = recipe.Categories.FirstOrDefault(c => c.Id == categoryId);
+                if (existing == null)
+                    recipe.Categories.Add(db.GetCategory(categoryId));
+            }
+
+            var categoriesToRemove = recipe.Categories.Where(c => !recipeModel.Categories.Contains(c.Id)).ToList();
+            foreach (var categoryToRemove in categoriesToRemove)           
+                recipe.Categories.Remove(categoryToRemove);
+        }
+
+        private async Task LoadCategoriesInViewBag(CreateRecipeViewModel recipeModel = null)
+        {
+            var categories = await db.GetCategoriesAsync();
+            ViewBag.CategoriesList = categories
+                    .Select(c => new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = recipeModel != null && recipeModel.Categories != null && recipeModel.Categories.Contains(c.Id) });
+        }
+
+        private async Task LoadCategoriesInViewBag(EditRecipeViewModel recipeModel)
+        {
+            var categories = await db.GetCategoriesAsync();
+            ViewBag.CategoriesList = categories
+                    .Select(c => new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = recipeModel != null && recipeModel.Categories != null && recipeModel.Categories.Contains(c.Id) });
         }
     }
 }
