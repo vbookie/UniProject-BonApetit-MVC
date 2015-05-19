@@ -5,8 +5,6 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cooking", "Cooking\Cooking.csproj", "{4EA36255-F403-4C40-9FE4-1C785BB78465}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cooking.Tests", "Cooking.Tests\Cooking.Tests.csproj", "{68A832E8-3289-4082-87A1-CB2AE686B88F}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{B4C26CB6-AB77-42B9-BD68-6447655DA518}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\NuGet.Config = .nuget\NuGet.Config
@@ -24,10 +22,6 @@ Global
 		{4EA36255-F403-4C40-9FE4-1C785BB78465}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4EA36255-F403-4C40-9FE4-1C785BB78465}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4EA36255-F403-4C40-9FE4-1C785BB78465}.Release|Any CPU.Build.0 = Release|Any CPU
-		{68A832E8-3289-4082-87A1-CB2AE686B88F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{68A832E8-3289-4082-87A1-CB2AE686B88F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{68A832E8-3289-4082-87A1-CB2AE686B88F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{68A832E8-3289-4082-87A1-CB2AE686B88F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
