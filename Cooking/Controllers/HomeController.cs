@@ -10,7 +10,7 @@ namespace Cooking.Controllers
     {
         public ActionResult Index()
         {
-            return View();
+            return RedirectToAction("Index", "Recipe");
         }
 
         public ActionResult About()

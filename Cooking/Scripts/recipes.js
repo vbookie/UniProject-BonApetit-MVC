@@ -1,7 +1,7 @@
 ﻿//#region Ingredients
 
-var ingredientEntryTemplate = '<div class="col-md-10 ingredient-entry-row"><div class="col-md-5"><input type="text" class="form-control ingredient-entry" /></div> ' +
-    '<div class="col-md-5 btn-group" role="group">' +
+var ingredientEntryTemplate = '<div class="col-md-10 ingredient-entry-row nopadding"><div class="col-md-5 nopadding"><input type="text" class="form-control ingredient-entry" /></div> ' +
+    '<div class="col-md-5 btn-group nopadding" role="group">' +
     '<button class="btn btn-default" type="button" onclick="removeAdditionalIngredient(this)"><span class="glyphicon glyphicon-minus"></span></button>' +
     '<button class="btn btn-default" type="button" onclick="addAdditionalIngredient(this)"><span class="glyphicon glyphicon-plus"></span></button>' +
     '</div></div>';

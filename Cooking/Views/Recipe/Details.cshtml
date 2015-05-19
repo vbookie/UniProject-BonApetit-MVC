@@ -40,8 +40,23 @@
             @Html.DisplayFor(model => model.PrepareInstructions)
         </p>
     </div>
+
     <div class="col-md-2">
-        <div class="panel panel-default">
+        <div class="panel panel-warning">
+            <div class="panel-heading">Similar recipes</div>
+            <div class="panel-body">
+                @foreach (var recipe in Model.LatestRecipes)
+                {
+                    <a href="@Url.Action("Details", new { id = recipe.Id })" title="@recipe.Name">
+                        <img src="@recipe.ImageUrl" class="img-responsive img-thumbnail" />
+                    </a>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-2">
+        <div class="panel panel-success">
             <div class="panel-heading">Latest recipes</div>
             <div class="panel-body">
                 @foreach (var recipe in Model.LatestRecipes)
