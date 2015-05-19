@@ -29,3 +29,7 @@ textarea {
     padding-left: 0;
     padding-right: 0;
 }
+
+.ingredient-entry-row {
+    margin-bottom: 6px;
+}

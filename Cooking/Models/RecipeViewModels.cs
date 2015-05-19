@@ -86,6 +86,8 @@ namespace Cooking.Models
         //[Required]
         public IList<string> Categories { get; set; }
 
+        public IEnumerable<SingleRecipeViewModel> SimilarRecipes { get; set; }
+
         public IEnumerable<SingleRecipeViewModel> LatestRecipes { get; set; }
     }
 

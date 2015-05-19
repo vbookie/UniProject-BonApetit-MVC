@@ -68,6 +68,7 @@ namespace Cooking.Controllers
             }
 
             var latestRecipes = await GetLatestRecipes();
+            var similarRecipes = GetSimilarRecipes(recipe);
 
             var model = new DetailsRecipeViewModel()
             {
@@ -78,6 +79,13 @@ namespace Cooking.Controllers
                 Ingredients = recipe.Ingredients.Select(i => i.Content).ToList(),
                 ImageUrl = Url.Content(recipe.Image.ImageUrl),
                 LatestRecipes = latestRecipes.Select(
+                    r => new SingleRecipeViewModel()
+                    {
+                        Id = r.Id,
+                        Name = r.Name,
+                        ImageUrl = Url.Content(r.Image.ImageUrl)
+                    }),
+                SimilarRecipes = similarRecipes.Select(
                     r => new SingleRecipeViewModel()
                     {
                         Id = r.Id,
@@ -293,6 +301,31 @@ namespace Cooking.Controllers
         {
             var latestRecipes = await db.GetRecipes().OrderByDescending(r => r.CreateDate).Take(3).ToListAsync();
             return latestRecipes;
+        }
+
+        private List<Recipe> GetSimilarRecipes(Recipe recipe)
+        {
+            //List<Recipe> similarRecipes;
+
+            //foreach (var category in recipe.Categories)
+            //{
+            //    similarRecipes.AddRange(db.GetRecipes(category.Name));
+            //}
+
+            //var allRecipes = similarRecipes.Where(r => r.Id != recipe.Id).ToList();
+            //// Ignore the current recipe
+            //    .Where(r => r.Categories.Any(c => recipe.Categories.Any(rc => rc.Name == c.Name))) // Get recipes which have at least one category the currect recipe has as well
+            //    .OrderByDescending(r => r.CreateDate)
+            //    .Take(3);
+
+            var allRecipes = db.GetRecipes().ToList();
+            var similarRecipes = allRecipes
+                .Where(r => r.Id != recipe.Id)
+                .Where(r => r.Categories.Any(c => recipe.Categories.Any(rc => rc.Name == c.Name))) // Get recipes which have at least one category the currect recipe has as well
+                .OrderByDescending(r => r.CreateDate)
+                .Take(3);
+
+            return similarRecipes.ToList();
         }
     }
 }
